@@ -17,7 +17,7 @@ from pandas import *
 stock_data=1  # 1 - Streamline data, 2 - OHLC data
 tickskip=1 #1 denotes every tick
 colm=0
-# This must be dump 123
+# This must be dump 123456789
 for k in range(0,1):
 	if k==0:fname="code07.01.16.txt"
 	#if k==0:fname="1sec_close.txt"
