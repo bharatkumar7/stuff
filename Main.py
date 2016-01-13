@@ -10,9 +10,6 @@ import mibian
 import pandas as pd
 from pandas import *
 
-#import matplotlib.dates as mdates
-
-
 
 stock_data=1  # 1 - Streamline data, 2 - OHLC data
 tickskip=1 #1 denotes every tick
@@ -21,18 +18,6 @@ colm=0
 for k in range(0,1):
 	if k==0:fname="code07.01.16.txt"
 	#if k==0:fname="1sec_close.txt"
-	if k==1:fname="NIFTY_AUG_8700C.txt"
-	if k==2:fname="NIFTY_AUG_8700C_0810.txt"
-	if k==3:fname="NIFTY_AUG_8700C_0817.txt"
-	if k==4:fname="NIFTY_JUL_8500C_0625.txt"
-	if k==5:fname="NIFTY_JUL_8500C_0626.txt"
-	if k==6:fname="NIFTY_JUL_8500C_0701.txt"
-	if k==7:fname="NIFTY_JUL_8500C_0702.txt"
-	if k==8:fname="NIFTY_JUL_8500C_0703.txt"
-	if k==9:fname="NIFTY_JUL_8500C_0706.txt"
-	if k==10:fname="NIFTY_JUL_8500C_0708.txt"
-	#if k==0:fname="ACC.txt"
-	#if k==0:fname="AMBUJACEM.txt"
 	
 	status = 0
 	pruy=0
@@ -42,9 +27,6 @@ for k in range(0,1):
 	stop_loss=0.97 #stop loss when entering a position
 	tpf=target_profit
 	tsl=stop_loss
-	
-	
-	
 	graph=1 #1 - Yes, 0 - None
 	tick_analysis_display=1 #1 - Yes , 0 - No
 	exchange_charges=8  # 16.69 for equities. 90 for option. 8 for futures
@@ -65,24 +47,13 @@ for k in range(0,1):
 	elif file_format==2:
 	 tedhi,dummy=(np.loadtxt(fname, dtype=str, delimiter=',', usecols=(0,1),skiprows=1,unpack=True))
 	 cl_price, vol=(np.loadtxt(fname, dtype=float, delimiter=',', usecols=(15,2), skiprows=1,unpack=True))
-	 #print to_datetime(tedhi\)
-	 #np.array([1368431149, 1368431150]).astype('datetime64[s]') #converting unix time stamp to datetime
-	 #pd.to_datetime((df_2.index.values*1e9).astype(int)) # can even use this
-	 #print to_datetime(tedhi.astype(int)*1e9)
 	 d={'Datetime': Series(to_datetime(tedhi.astype(int)*1e9)),
 	       'price': Series((cl_price)),
 	       'volume':Series((vol))}
 	 df=DataFrame(d)
-	 
-	 #print price
 	 df.set_index('Datetime', inplace=True)
 	 vol_sum = (df['volume'].resample(tf_sec, how='sum',fill_method='backfill',limit=0)).dropna(how='any', axis=0)
 	 price_ohlc = (df['price'].resample(tf_sec, how='ohlc',fill_method='backfill',limit=0)).dropna(how='any', axis=0)
-	 #print pd.concat([vol_sum, price_ohlc], 1, keys=['volume', 'price'])
-
-	 #print price_ohlc.open.isnull().sum()
-	 #print price_ohlc.dropna(thresh=None, how='any', axis=0)
-	 #print vol_sum.dropna(how='any', axis=0)
 	 numb=len(price_ohlc)
 	 xoi=np.min(price_ohlc.low)
 	 yoi=np.max(price_ohlc.high)
@@ -98,10 +69,6 @@ for k in range(0,1):
 	 else: rangeper=0.001/100 
 	 price_open,price_high,price_low,price_close=funct.range_bar(cl_price,vol,rangeper)
 	 numb=len(price_close)
-	 #print numb
-	 #for i in range(0,numb):
-	  #print price_open[i],price_high[i],price_low[i],price_close[i]
-	 #print "Back to Main"
 	 xoi=np.min(price_low)
 	 yoi=np.max(price_high)
 	 xoi=xoi-(xoi*0.001)
@@ -203,20 +170,6 @@ for k in range(0,1):
 	 hhv=np.max(tdata_hi[maxtick-14:maxtick-1])
 	 llv=np.min(tdata_lo[maxtick-14:maxtick-1])
 	 latest=maxtick-1
-	 #print hhv,llv,tdata_ltp[latest]hhhjk
-	 
-	 #--------------------- Black-Scholes Model for Option pricing------------------------
-	 #BS([underlyingPrice, strikePrice, interestRate, daysToExpiration], volatility=x, callPrice=y, putPrice=z)
-	 #c = mibian.BS([tdata_ltp_nifty[latest], 8800,8, 5], callPrice=tdata_ltp[latest])
-	 #c.impliedVolatility
-	 #c = mibian.BS([tdata_ltp_nifty[latest], 8700,8, 5], volatility=30)
-	 #c.callPrice
-	 #print round(c.impliedVolatility,2)
-	# -------------------------Trend Detection---------------------------------------
-	 #thhv=np.max(kmav[maxtick-15:maxtick-1])
-	 #tllv=np.min(kmav[maxtick-15:maxtick-1])
-	 
-	 #if (tdata_ltp[latest]>tdata_op[latest] and tdata_ltp[latest-1]>tdata_op[latest-1])
 	 
 	 if (kmav[latest]>1.001*kmav[latest-1]>1.001*kmav[latest-2]>1.001*kmav[latest-3]) or \
 	 (kmav[latest]<0.999*kmav[latest-1]<0.999*kmav[latest-2]<0.999*kmav[latest-3]):flatornot[latest]=kmav[latest]
